@@ -84,3 +84,22 @@ exports.mpesaCallback = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Check Payment Status
+exports.checkStatus = async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id).populate('bookId', 'pdfUrl title');
+        
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+
+        res.json({ 
+            status: order.status,
+            book: order.bookId, 
+            receipt: order.mpesaReceiptNumber 
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
