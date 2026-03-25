@@ -9,7 +9,7 @@ dotenv.config();
 const getAccessToken = async () => {
     const consumerKey = process.env.MPESA_CONSUMER_KEY;
     const consumerSecret = process.env.MPESA_CONSUMER_SECRET;
-    const url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+    const url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
 
     // Buffer auth string
     const auth = Buffer.from(`${consumerKey}:${consumerSecret}`).toString('base64');
@@ -29,7 +29,7 @@ const getAccessToken = async () => {
 // 2. STK Push (Prompt user to enter PIN)
 const stkPush = async (phoneNumber, amount, orderId) => {
     const accessToken = await getAccessToken();
-    const url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+    const url = "https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
 
     const timestamp = moment().format('YYYYMMDDHHmmss');
     const shortcode = process.env.MPESA_SHORTCODE;
@@ -50,10 +50,10 @@ const stkPush = async (phoneNumber, amount, orderId) => {
         BusinessShortCode: shortcode,
         Password: password,
         Timestamp: timestamp,
-        TransactionType: "CustomerPayBillOnline",
+        TransactionType: "CustomerBuyGoodsOnline",
         Amount: amount,
         PartyA: formattedPhone,
-        PartyB: shortcode,
+        PartyB: 6444134,
         PhoneNumber: formattedPhone,
         CallBackURL: `${process.env.MPESA_CALLBACK_URL}`,
         AccountReference: `PDF-Store-${orderId}`,
